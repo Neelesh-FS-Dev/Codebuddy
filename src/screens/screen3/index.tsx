@@ -11,8 +11,11 @@ import {
 } from 'react-native';
 import Button from '../../components/button';
 import {useRoute} from '@react-navigation/native';
+import {useDataContext} from '../../components/dataContext';
 
 const Screen3 = () => {
+  const {screen1Data, screen2Data} = useDataContext(); // Access context data
+
   const [countryCode, setCountryCode] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
@@ -44,7 +47,6 @@ const Screen3 = () => {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        {/* Country Code Dropdown */}
         <View style={styles.countryCodeDropdown}>
           <TouchableOpacity
             onPress={() => setCountryCodeOptionsVisible(true)}
@@ -58,7 +60,7 @@ const Screen3 = () => {
         <TextInput
           style={styles.phoneNumberInput}
           placeholder="Phone Number"
-          placeholderTextColor={'#000'}
+          placeholderTextColor="#000"
           keyboardType="numeric"
           value={phoneNumber}
           onChangeText={text => {
@@ -92,21 +94,32 @@ const Screen3 = () => {
         animationType="slide"
         onRequestClose={() => setDetailsModalVisible(false)}>
         <View style={styles.detailsModalContainer}>
-          <Text style={{color: '#000'}}>Email: {route.params.emailId}</Text>
-          <Text style={{color: '#000'}}>Password: {route.params.password}</Text>
-          <Text style={{color: '#000'}}>
-            First Name: {route.params.firstName}
+          <Text style={{color: '#000', fontSize: 20}}>
+            Email: {screen1Data.emailId}
           </Text>
-          <Text style={{color: '#000'}}>
-            Last Name: {route.params.lastName}
+          <Text style={{color: '#000', fontSize: 20}}>
+            Password: {screen1Data.password}
           </Text>
-          <Text style={{color: '#000'}}>Address: {route.params.address}</Text>
-          <Text style={{color: '#000'}}>Country Code: {countryCode}</Text>
-          <Text style={{color: '#000'}}>Phone Number: {phoneNumber}</Text>
+          <Text style={{color: '#000', fontSize: 20}}>
+            First Name: {screen2Data.firstName}
+          </Text>
+          <Text style={{color: '#000', fontSize: 20}}>
+            Last Name: {screen2Data.lastName}
+          </Text>
+          <Text style={{color: '#000', fontSize: 20}}>
+            Address: {screen2Data.address}
+          </Text>
+          <Text style={{color: '#000', fontSize: 20}}>
+            Country Code: {countryCode}
+          </Text>
+          <Text style={{color: '#000', fontSize: 20}}>
+            Phone Number: {phoneNumber}
+          </Text>
           <Button
             variant="primary"
             title="Close"
             onPress={() => setDetailsModalVisible(false)}
+            style={{marginTop: 50}}
           />
         </View>
       </Modal>
@@ -150,9 +163,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
   },
-  countryCodeDropdown: {
-    // flex: 1,
-  },
+  countryCodeDropdown: {},
   phoneNumberInput: {
     flex: 2,
     padding: 10,
@@ -181,6 +192,7 @@ const styles = StyleSheet.create({
   detailsModalContainer: {
     backgroundColor: '#fff',
     flex: 1,
+    gap: 10,
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
