@@ -39,6 +39,11 @@ const Screen1 = () => {
     navigation.navigate('Screen2');
   };
 
+  const handleSave = () => {
+    // Perform any data saving logic here
+    console.log('Data saved:', {emailId, password});
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -65,7 +70,10 @@ const Screen1 = () => {
           <Text style={styles.errorText}>{passwordError}</Text>
         )}
       </View>
-      <Button variant="primary" title="Next" onPress={handleValidation} />
+      <View style={styles.buttonContainer}>
+        <Button variant="secondary" title="Save" onPress={handleSave} />
+        <Button variant="primary" title="Next" onPress={handleValidation} />
+      </View>
     </View>
   );
 };
@@ -89,6 +97,11 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 12,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
   },
 });
 
