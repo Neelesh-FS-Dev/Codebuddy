@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import Button from '../../components/button';
 import {useNavigation} from '@react-navigation/native';
-import {useDataContext} from '../../components/dataContext'; // Import your context
+import {useDataContext} from '../../components/dataContext';
 
 const Screen2 = () => {
   const [firstName, setFirstName] = useState('');
@@ -17,22 +17,31 @@ const Screen2 = () => {
   const validateAddress = value => value && value.length < 10;
 
   const handleValidation = () => {
-    if (
-      validateFirstName(firstName) ||
-      validateLastName(lastName) ||
-      validateAddress(address)
-    ) {
+    let isValid = true;
+
+    if (!/^[A-Za-z]{2,50}$/.test(firstName)) {
       setIsFormComplete(true);
-    } else {
+      isValid = false;
+    }
+
+    if (lastName && !/^[A-Za-z]+$/.test(lastName)) {
+      setIsFormComplete(true);
+      isValid = false;
+    }
+
+    if (address.length < 10) {
+      setIsFormComplete(true);
+      isValid = false;
+    }
+
+    if (isValid) {
       setIsFormComplete(false);
       setScreen2Data({
         firstName,
         lastName,
         address,
       });
-      if (isFormComplete) {
-        navigation.navigate('Screen3');
-      }
+      navigation.navigate('Screen3');
     }
   };
 

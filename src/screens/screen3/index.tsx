@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import CheckBox from '@react-native-community/checkbox';
 import React, {useState} from 'react';
 import {
@@ -10,19 +9,16 @@ import {
   TextInput,
 } from 'react-native';
 import Button from '../../components/button';
-import {useRoute} from '@react-navigation/native';
 import {useDataContext} from '../../components/dataContext';
 
 const Screen3 = () => {
-  const {screen1Data, screen2Data} = useDataContext(); // Access context data
-
+  const {screen1Data, screen2Data} = useDataContext();
   const [countryCode, setCountryCode] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [selectedCountryCode, setSelectedCountryCode] = useState('');
   const [countryCodeOptionsVisible, setCountryCodeOptionsVisible] =
     useState(false);
-  const route = useRoute();
   const [errorMessage, setErrorMessage] = useState('');
   const [savedPhoneNumber, setSavedPhoneNumber] = useState('');
   const [savedCountryCode, setSavedCountryCode] = useState('');
@@ -31,6 +27,8 @@ const Screen3 = () => {
   const handleValidation = () => {
     if (selectedCountryCode === '' || !/^\d{10}$/.test(phoneNumber)) {
       setErrorMessage('Please enter a valid 10-digit phone number.');
+    } else if (!acceptTerms) {
+      setErrorMessage('Please accept the terms and conditions.');
     } else {
       setErrorMessage('');
       setSavedPhoneNumber(phoneNumber);
@@ -68,7 +66,7 @@ const Screen3 = () => {
               setPhoneNumber(text);
             }
           }}
-          maxLength={10} // Restrict input to 10 characters
+          maxLength={10}
         />
       </View>
 
@@ -94,32 +92,24 @@ const Screen3 = () => {
         animationType="slide"
         onRequestClose={() => setDetailsModalVisible(false)}>
         <View style={styles.detailsModalContainer}>
-          <Text style={{color: '#000', fontSize: 20}}>
-            Email: {screen1Data.emailId}
-          </Text>
-          <Text style={{color: '#000', fontSize: 20}}>
+          <Text style={styles.detailsText}>Email: {screen1Data.emailId}</Text>
+          <Text style={styles.detailsText}>
             Password: {screen1Data.password}
           </Text>
-          <Text style={{color: '#000', fontSize: 20}}>
+          <Text style={styles.detailsText}>
             First Name: {screen2Data.firstName}
           </Text>
-          <Text style={{color: '#000', fontSize: 20}}>
+          <Text style={styles.detailsText}>
             Last Name: {screen2Data.lastName}
           </Text>
-          <Text style={{color: '#000', fontSize: 20}}>
-            Address: {screen2Data.address}
-          </Text>
-          <Text style={{color: '#000', fontSize: 20}}>
-            Country Code: {countryCode}
-          </Text>
-          <Text style={{color: '#000', fontSize: 20}}>
-            Phone Number: {phoneNumber}
-          </Text>
+          <Text style={styles.detailsText}>Address: {screen2Data.address}</Text>
+          <Text style={styles.detailsText}>Country Code: {countryCode}</Text>
+          <Text style={styles.detailsText}>Phone Number: {phoneNumber}</Text>
           <Button
             variant="primary"
             title="Close"
             onPress={() => setDetailsModalVisible(false)}
-            style={{marginTop: 50}}
+            style={styles.closeButton}
           />
         </View>
       </Modal>
@@ -138,7 +128,7 @@ const Screen3 = () => {
                 setCountryCode(option.value);
                 setCountryCodeOptionsVisible(false);
               }}>
-              <Text style={{color: '#000'}}>{option.label}</Text>
+              <Text style={styles.dropdownText}>{option.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -196,19 +186,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
-  closeModalButton: {
-    marginTop: 20,
+  detailsText: {
+    color: '#000',
+    fontSize: 20,
+  },
+  closeButton: {
+    marginTop: 50,
     backgroundColor: '#007bff',
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
     alignItems: 'center',
   },
-
   dropdownOption: {
     padding: 10,
     borderBottomWidth: 1,
     borderColor: '#ccc',
+  },
+  dropdownText: {
+    color: '#000',
   },
   checkboxContainer: {
     flexDirection: 'row',

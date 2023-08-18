@@ -10,38 +10,55 @@ const Screen1 = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigation = useNavigation();
-  const {setScreen1Data} = useDataContext(); // Access context function
+  const {setScreen1Data} = useDataContext();
+  const [isSaved, setIsSaved] = useState(false);
 
-  const handleValidation = () => {
-    setEmailError('');
-    setPasswordError('');
-
+  const validateEmail = email => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailId)) {
-      setEmailError('Please enter a valid email address.');
-      return;
-    }
+    return emailRegex.test(email);
+  };
 
+  const validatePassword = pass => {
     const passwordRegex =
       /^(?=(.*[A-Z]){2,})(?=(.*[a-z]){2,})(?=(.*\d){2,})(?=(.*[!@#$%^&*()\-_=+{};:,<.>]){2,}).{8,}$/;
-    if (!passwordRegex.test(password)) {
-      setPasswordError(
-        'Password must contain 2 uppercase letters, 2 lowercase letters, 2 numbers, and 2 special characters.',
-      );
-      return;
-    }
-
-    setScreen1Data({
-      emailId,
-      password,
-    });
-
-    navigation.navigate('Screen2');
+    return passwordRegex.test(pass);
   };
 
   const handleSave = () => {
-    // Perform any data saving logic here
-    console.log('Data saved:', {emailId, password});
+    setEmailError('');
+    setPasswordError('');
+
+    let isValid = true;
+
+    if (!validateEmail(emailId)) {
+      setEmailError('Please enter a valid email address.');
+      isValid = false;
+    }
+
+    if (!validatePassword(password)) {
+      setPasswordError(
+        'Password must contain 2 uppercase letters, 2 lowercase letters, 2 numbers, and 2 special characters.',
+      );
+      isValid = false;
+    }
+
+    if (isValid) {
+      console.log('Data saved:', {emailId, password});
+      setIsSaved(true);
+    }
+  };
+
+  const handleNext = () => {
+    if (isSaved) {
+      setScreen1Data({
+        emailId,
+        password,
+      });
+
+      navigation.navigate('Screen2');
+    } else {
+      console.log('Save data before proceeding to the next screen.');
+    }
   };
 
   return (
@@ -72,7 +89,7 @@ const Screen1 = () => {
       </View>
       <View style={styles.buttonContainer}>
         <Button variant="secondary" title="Save" onPress={handleSave} />
-        <Button variant="primary" title="Next" onPress={handleValidation} />
+        <Button variant="primary" title="Next" onPress={handleNext} />
       </View>
     </View>
   );
